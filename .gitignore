@@ -1,0 +1,3 @@
+.DS_Store
+venv
+api_key.env
