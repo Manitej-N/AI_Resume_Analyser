@@ -1,4 +1,4 @@
 .DS_Store
 venv
-api_key.env
+.env
 sample_data_1.pdf
