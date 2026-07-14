@@ -16,4 +16,4 @@ def extract_text_frm_pdf(path):
                         clean_lines.append(lines[i])
     final_output = "\n".join(clean_lines)
     return final_output
-print(extract_text_frm_pdf("sample_data/Sample_CV.pdf"))
+print(extract_text_frm_pdf("sample_data/sample_data_1.pdf"))
