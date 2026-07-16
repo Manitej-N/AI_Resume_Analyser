@@ -40,9 +40,17 @@ no markdown formatting, no explanation outside the JSON:
             result = json.loads(raw_result)
             if "match_score" in result:
                 st.write("Match Score: ", result["match_score"])
-                st.write("Matched Skills: ", result["matching_skills"])
-                st.write("Missing Skills: ", result["missing_skills"])
-                st.write("Suggestions: ", result["suggestions"])
-                st.write("Formatting Issues: ", result["formatting_issues"])
+                st.subheader("Matched Skills")
+                for item in result["matching_skills"]:
+                    st.markdown(f"- {item}")
+                st.subheader("Missing Skills")
+                for item in result["missing_skills"]:
+                    st.markdown(f"- {item}")
+                st.subheader("Suggestions")
+                for item in result["suggestions"]:
+                    st.markdown(f"- {item}")
+                st.subheader("Formatting Issues")
+                for item in result["formatting_issues"]:
+                    st.markdown(f"- {item}")
             else:
                 st.write(result["error"])
