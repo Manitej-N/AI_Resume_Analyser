@@ -2,10 +2,18 @@ import os
 import extract 
 import json
 from google import genai
+from google.genai.errors import ServerError
 from dotenv import load_dotenv
 load_dotenv('.env')
 key = os.getenv("GOOGLE_API_KEY") 
 client = genai.Client(api_key=key)
+def call_model(prompt):
+    try:
+        output = client.models.generate_content(model="gemini-3.5-flash", contents= prompt)
+        return output.text
+    except ServerError:
+        print('Server Error, please try again' )
+        return '{"error": "Server busy, please try again"}'
 job_description = """Job Title: Junior Software Tester (Internship)
 Location: Remote / Hybrid
 
@@ -32,10 +40,10 @@ Requirements:
 - Experience with version control (Git) is a plus
 - Exposure to test automation frameworks (Selenium, PyTest) is a plus but not required"""
 final_output = extract.extract_text_frm_pdf("sample_data/sample_data_1.pdf")
-def call_model(prompt):
-    output = client.models.generate_content(model="gemini-3.5-flash", contents= prompt)
-    return output.text
-prompt = f"""You are a resume analysis assistant. Compare the following resume against 
+if final_output.strip() == "":
+    print("Uploaded resume can't be read — it may be a scanned image with no selectable text.")
+else:
+    prompt = f"""You are a resume analysis assistant. Compare the following resume against 
 the job description and return your analysis.
 
 RESUME:
@@ -54,6 +62,9 @@ no markdown formatting, no explanation outside the JSON:
   "suggestions": [<list of strings>],
   "formatting_issues": [<list of strings>]
 }}"""
-raw_result = call_model(prompt)
-result = json.loads(raw_result)
-print(result["match_score"])
+    raw_result = call_model(prompt)
+    result = json.loads(raw_result)
+    if 'match_score' in result:
+        print(result["match_score"])
+    else:
+        print(result["error"])
