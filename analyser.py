@@ -3,9 +3,13 @@ import json
 from google import genai
 from google.genai.errors import ServerError
 from dotenv import load_dotenv
+import streamlit as st
 
 load_dotenv('.env')
-key = os.getenv("GOOGLE_API_KEY") 
+try:
+    key = st.secrets.get("GOOGLE_API_KEY") 
+except:    
+    key = os.getenv("GOOGLE_API_KEY") 
 client = genai.Client(api_key=key)
 
 def call_model(prompt):
